@@ -1,0 +1,41 @@
+package main
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"strconv"
+)
+
+const (
+	contentLength = "Content-Length"
+	contentType   = "Content-Type"
+)
+
+const port = 8080
+
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /video", func(w http.ResponseWriter, r *http.Request) {
+		videoPath := "../videos/SampleVideo_1280x720_1mb.mp4"
+		videoReader, err := os.Open(videoPath)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		defer videoReader.Close()
+		videoStats, err := videoReader.Stat()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Add(contentLength, strconv.FormatInt(videoStats.Size(), 10))
+		w.Header().Add(contentType, "video/mp4")
+		// use io.Copy for streaming.
+		io.Copy(w, videoReader)
+	})
+
+	http.ListenAndServe(fmt.Sprint(":", port), mux)
+}
