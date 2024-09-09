@@ -6,6 +6,12 @@ You need Go installed to run this.
 
 To start the microservice:
 
-    go run main.go
+    PORT=4000 go run main.go
 
-Then point your browser at http://localhost:8080
+Then point your browser at http://localhost:4000
+
+Alternatively, with [air](https://github.com/air-verse/air "air") installed, start the microservice with:
+
+    PORT=4000 air
+
+This will create a `./tmp` path to build main into during development, so add it to your `.gitignore` file.
