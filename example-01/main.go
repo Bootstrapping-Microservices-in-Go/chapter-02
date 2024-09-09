@@ -8,7 +8,6 @@ import (
 const port = 3000
 
 func main() {
-
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello World!")
